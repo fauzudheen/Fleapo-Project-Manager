@@ -18,13 +18,14 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)):
     return AuthService(db).login(user_login)
 
 @router.get("/me", response_model=UserResponse)
-def me(token: str = TokenRequest, db: Session = Depends(get_db)):
-
+def me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    print("/me called")
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token is missing",
         )
+    print("token:", token)
     
     user = AuthService(db).get_current_user(token)
     if not user:
@@ -32,4 +33,5 @@ def me(token: str = TokenRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
         )
+    print("user:", user)
     return user
