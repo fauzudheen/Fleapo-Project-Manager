@@ -37,6 +37,9 @@ class UserService:
         if not self.get_user_by_id(user_id):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
         
+        if user.email and self.get_user_by_email(user.email) and self.get_user_by_email(user.email).id != user_id:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already in use")
+        
         try:
             self.db.query(User).filter(User.id == user_id).update(user.dict())
             self.db.commit()
