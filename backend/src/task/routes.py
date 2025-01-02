@@ -26,7 +26,7 @@ def create_task(
     description: str = Form(...),
     status: str = Form(...),
     due_date: str = Form(...),
-    image: UploadFile | None = File(None),
+    new_image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -36,7 +36,7 @@ def create_task(
         "status": status,
         "due_date": due_date
     }
-    return TaskService(db).create_task(form_data, current_user, image)
+    return TaskService(db).create_task(form_data, current_user, new_image)
 
 @router.get("/", response_model=list[TaskResponse])
 def get_all_tasks(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -53,7 +53,8 @@ def update_task(
     description: str = Form(None),
     status: str = Form(None),
     due_date: str = Form(None),
-    image: UploadFile | None = File(None),
+    image_url: str = Form(None),
+    new_image: UploadFile | None = File(None),
     db: Session = Depends(get_db)
 ):
     form_data = {
@@ -61,9 +62,10 @@ def update_task(
         "description": description,
         "status": status,
         "due_date": due_date,
+        "image_url": image_url
     }
 
-    return TaskService(db).update_task(task_id, form_data, image)
+    return TaskService(db).update_task(task_id, form_data, new_image)
 
 
 @router.patch("/{task_id}", response_model=TaskResponse)

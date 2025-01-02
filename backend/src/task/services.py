@@ -29,12 +29,12 @@ class TaskService:
         self, 
         form_data: dict, 
         current_user: User, 
-        image: UploadFile | None = None 
+        new_image: UploadFile | None = None 
     ) -> Task:
         try:
             task_data = {
                 **form_data,
-                "image_url": self.save_image(image) if image else None,
+                "image_url": self.save_image(new_image) if new_image else None,
                 "due_date": datetime.fromisoformat(form_data["due_date"]),
                 "user_id": current_user.id,
             }
@@ -55,24 +55,17 @@ class TaskService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
         return task
 
-    def update_task(self, task_id: int, form_data: dict, image: UploadFile | None = None) -> TaskResponse:
-        print("----update task----")
-        print("form data", form_data)
+    def update_task(self, task_id: int, form_data: dict, new_image: UploadFile | None = None) -> TaskResponse:
         db_task = self.get_task_by_id(task_id)
-        print("db_task", db_task)
         try:
             update_data = {
                 **form_data,
                 "due_date": datetime.fromisoformat(form_data["due_date"])
             }
 
-            if image:
-                print("image")
-                new_image_url = self.save_image(image)
+            if new_image:
+                new_image_url = self.save_image(new_image)
                 update_data["image_url"] = new_image_url
-            else:
-                print("no image")
-                update_data["image_url"] = ""
 
             self.db.query(Task).filter(Task.id == task_id).update(update_data)
             self.db.commit()

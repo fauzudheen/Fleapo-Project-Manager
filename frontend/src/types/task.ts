@@ -4,16 +4,18 @@ export enum TaskStatus {
     Completed = "completed"
 }
 
-export interface Task {
+export type Task = {
     id: number;
     title: string;
     description: string;
     status: TaskStatus;
     created_at: string;
     updated_at: string;
-    due_date: string | null;
-    image_url: string | null;
+    due_date: string;
+    image_url: string;
 }
+
+export type TaskDto = Omit<Task, "id" | "created_at" | "updated_at">;
 
 export interface TaskAnalytics {
     total_tasks: number;

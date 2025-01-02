@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Task, TaskStatus } from '@/types/task';
+import { TaskDto, TaskStatus } from '@/types/task';
 import { baseURL } from '@/api/const';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 
@@ -15,7 +15,7 @@ interface FormErrors {
 }
 
 interface TaskFormProps {
-  initialData?: Task;
+  initialData?: TaskDto;
   onSubmit: (formData: FormData) => Promise<void>;
   isLoading: boolean;
 }
@@ -23,26 +23,22 @@ interface TaskFormProps {
 const INITIAL_FORM_DATA = {
   title: "",
   description: "",
-  status: "",
+  status: TaskStatus.Pending,
   due_date: "",
   image_url: "",
 };
 
-const TaskForm: React.FC<TaskFormProps> = ({ 
+const TaskForm =  ({ 
   initialData = INITIAL_FORM_DATA,
   onSubmit,
   isLoading 
-}) => {
+}: TaskFormProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [formData, setFormData] = useState(initialData);
-  const [statusOptions] = useState<TaskStatus[]>([
-    TaskStatus.Pending,
-    TaskStatus.InProgress,
-    TaskStatus.Completed,
-  ]);
+  const [formData, setFormData] = useState<TaskDto>(initialData);
+  const [statusOptions] = useState<TaskStatus[]>(Object.values(TaskStatus));
   
 
   useEffect(() => {
@@ -69,7 +65,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
     }
 
     setFormErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const errorsFound =  Object.keys(newErrors).length === 0;
+    return errorsFound
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,9 +89,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return
 
     try {
       const data = new FormData();
@@ -105,7 +100,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
       });
       
       if (selectedImage) {
-        data.append("image", selectedImage);
+        data.append("new_image", selectedImage);
+      } else if (formData.image_url) {
+        data.append("image_url", formData.image_url);
       } else {
         data.append("image_url", "");
       }

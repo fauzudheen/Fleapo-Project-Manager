@@ -6,7 +6,7 @@ import API from '@/api/axios';
 import { Task } from '@/types/task';
 import TaskForm from '@/components/common/task/TaskForm';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import TaskCard from '@/components/task/TaskCard';
+import TaskCard from '@/components/common/task/TaskCard';
 
 const Tasks = () => {
   const [isOpen, setIsOpen] = useState(false);

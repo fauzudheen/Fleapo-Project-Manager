@@ -10,7 +10,7 @@ import DashboardLayout from "./components/layout/DashboardLayout"
 import Settings from "./routes/Settings"
 
 export default function App() {
-  const protectedRoute = ProtectedRoute()
+  const protectedRoute = ProtectedRoute() // useProtectedRoute
   const publicRoute = PublicOnlyRoute()
 
   const routes = [

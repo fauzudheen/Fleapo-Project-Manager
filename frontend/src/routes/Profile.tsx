@@ -22,16 +22,6 @@ const Profile = () => {
     email: user?.email || '',
   });
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-      });
-    }
-  }, [user]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));

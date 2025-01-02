@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useWebStore } from "../store/authStore";
+import { baseURL } from "./const";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
-// Add request interceptor
+// request interceptor
 API.interceptors.request.use(
     (config) => {
         console.log("Request sent.........");
@@ -19,7 +20,7 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add response interceptor
+// response interceptor
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -39,7 +40,7 @@ API.interceptors.response.use(
 
       try {
         console.log("Refreshing access token.........");
-        const refreshResponse = await API.post("/auth/token/refresh/", {
+        const refreshResponse = await axios.post(`${baseURL}/auth/token/refresh/`, {
           refresh_token: refreshToken,
         });
 
@@ -57,6 +58,7 @@ API.interceptors.response.use(
       } catch (refreshError) {
         console.error("Refresh token error:", refreshError);
         useWebStore.getState().clearAuth(); 
+        console.log("Clearing auth state.........");
         return Promise.reject(refreshError);
       }
     }

@@ -53,7 +53,17 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			  'fleapo-green': {
+				50: '#d6f3f4',    
+				75: '#ade8e9',  
+				90: '#7fdadb',
+				100: '#0f909a',
+				125: '#0b6d74',
+				150: '#084f53',
+				175: '#053436',
+				200: '#021b1c',
+			  },
   		}
   	}
   },
