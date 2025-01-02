@@ -1,0 +1,1 @@
+export const fleapoFavicon = "https://cdn.prod.website-files.com/666549fe1fe17cb1b97aba9e/66a37b176ef4409a502034b1_fleapo-icon%202.png";
